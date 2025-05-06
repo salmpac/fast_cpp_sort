@@ -19,11 +19,13 @@ class ThreadPull {
     ~ThreadPull() {
         quit_flag = true;
         for (int i = 0; i < threads.size(); ++i) {
+            // so i am not sure that this works well
             new_tasks.notify_all();
             threads[i].join();
         }
     }
 
+    // callback is used for dynamic tasks graph for notifying other tasks
     void add_task(std::function<void(size_t)> callback, DefferedFuture task) {
         std::lock_guard<std::mutex> lk(queue_mutex);
 
